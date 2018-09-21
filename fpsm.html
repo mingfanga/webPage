@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="jquery.min.js"></script> 
+    <!-- D:\机动车内网\jdvnw\app\public\hangx\jdcnw\public\js\jquery.min.js-->
+    <OBJECT id=MSComm1 CLASSID="clsid:648A5600-2C6E-101B-82B6-000000000014" codebase="MSCOMM32.OCX" type="application/x-oleobject"  width=0 height=0 >
+         <PARAM   NAME="CommPort"   VALUE="8"/> 
+         <PARAM   NAME="DataBits"   VALUE="8"/> 
+         <PARAM   NAME="StopBits"   VALUE="1"/> 
+         <PARAM   NAME="BaudRate"   VALUE="9600"/> 
+         <PARAM   NAME="Settings"   VALUE="9600,N,8,1"/>     
+         <PARAM   NAME="RTSEnable"   VALUE="1"/> 
+         <PARAM   NAME="DTREnable"   VALUE="1"/> 
+         <PARAM   NAME="Handshaking"   VALUE="0"/> 
+         <PARAM   NAME="NullDiscard"   VALUE="0"/> 
+         <PARAM   NAME="ParityReplace"   VALUE="?"/>
+         <PARAM   NAME="EOFEnable"   VALUE="0"/>       
+         <PARAM   NAME="InputMode"   VALUE="0"/>    
+         <PARAM   NAME="InBufferSize"   VALUE="1024"/>       
+         <PARAM   NAME="InputLen"   VALUE="0"/>     
+         <PARAM   NAME="OutBufferSize"   VALUE="512"/> 
+         <PARAM   NAME="SThreshold"   VALUE="0"/> 
+         <PARAM   NAME="RThreshold"   VALUE="1"/>
+   </OBJECT>
+ 
+ 
+     <SCRIPT   ID=clientEventHandlersJS   LANGUAGE=javascript>   
+        function   MSComm1_OnComm(){ 
+        if(smflag){
+                smflag = false;
+                setTimeout(showdata,500);
+            }
+     
+           switch(MSComm1.CommEvent){
+             case 1:{ window.alert("Send OK！"); break;}  //发送事件
+             case 2: { Receive();break;} //接收事件
+             default: alert("Event Raised!"+MSComm1.CommEvent);
+           }       
+        } 
+    </SCRIPT>
+   
+<SCRIPT   LANGUAGE=javascript   FOR=MSComm1   EVENT=OnComm>
+        MSComm1_OnComm();
+   </SCRIPT> 
+    
+   
+   <script   language="JavaScript"   type="text/JavaScript">
+var smflag = true;   
+   mscomm_scan_value = '';
+  
+    function OperatePort() {
+      if(MSComm1.PortOpen==true){
+           try{
+                MSComm1.PortOpen=false;
+                alert("关闭");
+           }catch(ex){
+                alert(ex.message);
+           }       
+      }else{
+           try{ 
+                MSComm1.PortOpen=true;
+         
+        alert("打开");
+           }catch(ex){
+                alert(ex.message);
+            }     
+      }
+   }
+    
+  
+   function Receive()
+   {   
+      mscomm_scan_value += MSComm1.Input; 
+   }
+    
+   function showdata(){
+            smflag = true;
+            OperatePort();
+            var str = mscomm_scan_value;
+            mscomm_scan_value = '';
+            alert(str);
+             
+             
+   }
+    
+   $(function(){
+        OperatePort();
+         
+   });
+</script>   
+  
+</head> 
+<body >
+   
+    <br></br>
+    <button onclick="MSComm1_OnComm();">扫描</button>
+</body> 
+</html>
